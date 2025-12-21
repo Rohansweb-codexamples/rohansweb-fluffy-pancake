@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluffy-Pancake Christmas Album</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Quicksand:wght@300;500&display=swap');
+
+        :root {
+            --holiday-red: #c41e3a;
+            --holiday-green: #165b33;
+            --snow-white: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(to bottom, #0a192f, #1a365d);
+            color: var(--snow-white);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        h1, h2, .festive-font {
+            font-family: 'Mountains of Christmas', cursive;
+        }
+
+        .snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .snowflake {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) translateX(0); }
+            100% { transform: translateY(110vh) translateX(20px); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+        }
+
+        .album-art {
+            box-shadow: 0 0 50px rgba(196, 30, 58, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .album-art:hover {
+            transform: scale(1.02) rotate(1deg);
+        }
+
+        .btn-download {
+            background: var(--holiday-red);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+        }
+
+        .btn-download:hover {
+            background: #a01830;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 30, 58, 0.5);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col items-center justify-center min-min-h-screen">
+    <div class="snow-container" id="snow"></div>
+
+    <main class="relative z-10 w-full max-w-4xl glass-card p-6 md:p-12 my-10">
+        <div class="flex flex-col md:flex-row gap-12 items-center">
+            
+            <!-- Album Cover Side -->
+            <div class="w-full md:w-1/2">
+                <div class="album-art aspect-square bg-gradient-to-br from-red-600 to-green-800 rounded-lg flex flex-col items-center justify-center text-center p-6 border-8 border-white/20">
+                    <div class="text-6xl mb-4">🥞</div>
+                    <h1 class="text-5xl md:text-6xl font-bold mb-2">Fluffy Pancake</h1>
+                    <p class="festive-font text-3xl text-yellow-300">A Very Syrupy Christmas</p>
+                    <div class="mt-8 opacity-50 text-sm">© 2025 Fluffy-Pancake Studios</div>
+                </div>
+            </div>
+
+            <!-- Content Side -->
+            <div class="w-full md:w-1/2 space-y-8">
+                <div>
+                    <span class="inline-block px-3 py-1 bg-green-700 rounded-full text-xs font-bold uppercase tracking-widest mb-4">Festive Release</span>
+                    <h2 class="text-5xl font-bold text-white mb-4">The Holiday Collection</h2>
+                    <p class="text-xl text-blue-100/80 leading-relaxed">
+                        The ultimate soundtrack for a snowy morning. Get the complete Fluffy-Pancake holiday experience in one bundle.
+                    </p>
+                </div>
+
+                <div class="pt-6">
+                    <a href="https://github.com/Rohansweb-codexamples/rohansweb-fluffy-pancake/raw/refs/heads/main/Christmasmusic.zip" 
+                       class="btn-download w-full py-5 px-8 rounded-full font-bold text-2xl flex items-center justify-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                        Download Album
+                    </a>
+                    <p class="text-center text-sm mt-6 text-white/40 italic">High-fidelity holiday audio bundle (.zip)</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="relative z-10 text-center text-white/60 text-sm mb-8">
+        <p>Part of the Fluffy-Pancake Ecosystem</p>
+        <div class="flex justify-center gap-6 mt-4">
+            <a href="#" class="hover:text-red-400 transition-colors uppercase tracking-widest text-xs font-bold">GitHub</a>
+            <a href="#" class="hover:text-red-400 transition-colors uppercase tracking-widest text-xs font-bold">Documentation</a>
+            <a href="#" class="hover:text-red-400 transition-colors uppercase tracking-widest text-xs font-bold">Privacy</a>
+        </div>
+    </footer>
+
+    <script>
+        function createSnowflake() {
+            const snowContainer = document.getElementById('snow');
+            const snowflake = document.createElement('div');
+            
+            const size = Math.random() * 5 + 2 + 'px';
+            const left = Math.random() * 100 + 'vw';
+            const duration = Math.random() * 3 + 2 + 's';
+            const delay = Math.random() * 5 + 's';
+            const opacity = Math.random() * 0.6 + 0.2;
+
+            snowflake.classList.add('snowflake');
+            snowflake.style.width = size;
+            snowflake.style.height = size;
+            snowflake.style.left = left;
+            snowflake.style.animationDuration = duration;
+            snowflake.style.animationDelay = delay;
+            snowflake.style.opacity = opacity;
+
+            snowContainer.appendChild(snowflake);
+
+            setTimeout(() => {
+                snowflake.remove();
+            }, (parseFloat(duration) + parseFloat(delay)) * 1000);
+        }
+
+        for(let i = 0; i < 50; i++) {
+            createSnowflake();
+        }
+        setInterval(createSnowflake, 200);
+    </script>
+</body>
+</html>
