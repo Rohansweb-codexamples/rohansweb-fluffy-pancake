@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Party Booking & Check‑in Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    /* ---------- GLOBAL ---------- */
+    :root {
+      --pink: #ff3cac;
+      --yellow: #ffde59;
+      --blue: #4facfe;
+      --purple: #7367f0;
+      --green: #22c55e;
+      --orange: #ff7b54;
+      --bg-dark: #020617;
+      --card-dark: #0b1220;
+      --light: #f9fafb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ff3cac 0%, #784ba0 50%, #2b86c5 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: white;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1150px;
+      background: radial-gradient(circle at top left, #ffde59, #ff3cac 40%, #111827 70%);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      border: 3px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(10px);
+    }
+
+    .app-inner {
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 18px;
+      padding: 22px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .app-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ---------- HEADER ---------- */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .title-block {
+      max-width: 520px;
+    }
+
+    h1 {
+      font-size: 32px;
+      line-height: 1.1;
+      margin-bottom: 6px;
+      background: linear-gradient(90deg, #ffde59, #ff3cac, #4facfe);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #e5e7eb;
+      opacity: 0.9;
+    }
+
+    .tag {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      color: #0f172a;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+    }
+
+    /* ---------- CARD ---------- */
+    .card {
+      background:
+        radial-gradient(circle at top, rgba(248, 113, 113, 0.18), transparent 55%),
+        radial-gradient(circle at bottom, rgba(56, 189, 248, 0.18), transparent 55%),
+        #020617;
+      border-radius: 18px;
+      padding: 18px 18px 20px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: conic-gradient(from 180deg, #ffde59, #ff3cac, #4facfe, #ffde59);
+      box-shadow: 0 0 12px rgba(252, 211, 77, 0.9);
+    }
+
+    .card-caption {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+      margin-top: 4px;
+    }
+
+    .pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.86);
+    }
+
+    /* ---------- FORM ---------- */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .field-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .label span:last-child {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    input,
+    select,
+    textarea {
+      background: rgba(15, 23, 42, 0.92);
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      color: #f9fafb;
+      padding: 8px 12px;
+      font-size: 13px;
+      outline: none;
+      transition: border 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    textarea {
+      border-radius: 12px;
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #ffde59;
+      box-shadow:
+        0 0 0 1px rgba(250, 204, 21, 0.5),
+        0 0 20px rgba(250, 204, 21, 0.3);
+      background: rgba(15, 23, 42, 1);
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.13s ease, box-shadow 0.13s ease, filter 0.13s ease;
+      white-space: nowrap;
+    }
+
+    button:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: none;
+      filter: brightness(0.95);
+    }
+
+    .btn-primary {
+      background: linear-gradient(120deg, #ffde59, #ff8a4a, #ff3cac);
+      color: #111827;
+      box-shadow: 0 12px 28px rgba(249, 115, 22, 0.6);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px dashed rgba(148, 163, 184, 0.9);
+      color: #e5e7eb;
+    }
+
+    .count-badge {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      color: #9ca3af;
+    }
+
+    .count-badge strong {
+      color: #f9fafb;
+    }
+
+    /* ---------- RIGHT COLUMN NAV ---------- */
+    .right-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .right-title {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot-row {
+      display: flex;
+      gap: 4px;
+    }
+
+    .mini-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle, #ffde59, #ff3cac);
+      opacity: 0.9;
+    }
+
+    .tab-row {
+      display: inline-flex;
+      background: rgba(15, 23, 42, 0.88);
+      border-radius: 999px;
+      padding: 3px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .tab-btn {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: none;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      background: transparent;
+      color: #e5e7eb;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(120deg, #4facfe, #a855f7);
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .filter-select {
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 999px;
+      padding: 5px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      font-size: 11px;
+      color: #e5e7eb;
+      cursor: pointer;
+    }
+
+    /* ---------- PANELS ---------- */
+    .panel {
+      display: none;
+      max-height: 340px;
+      overflow: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: #4b5563 transparent;
+    }
+
+    .panel.active {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .panel::-webkit-scrollbar-thumb {
+      background: #4b5563;
+      border-radius: 999px;
+    }
+
+    .empty {
+      font-size: 12px;
+      color: #9ca3af;
+      text-align: center;
+      padding: 24px 12px;
+      border-radius: 14px;
+      border: 1px dashed rgba(75, 85, 99, 0.8);
+      background:
+        radial-gradient(circle at top, rgba(248, 250, 252, 0.06), transparent 60%),
+        rgba(15, 23, 42, 0.9);
+    }
+
+    .empty strong {
+      color: #e5e7eb;
+    }
+
+    /* ---------- PARTY CARDS ---------- */
+    .party-card {
+      background:
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.23), transparent 55%),
+        radial-gradient(circle at bottom left, rgba(251, 191, 36, 0.2), transparent 60%),
+        rgba(15, 23, 42, 0.95);
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      padding: 10px 11px;
+      display: grid;
+      grid-template-columns: 1.5fr 1.1fr;
+      gap: 8px;
+      align-items: stretch;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (max-width: 900px) {
+      .party-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .party-main {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .party-top-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .party-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #f9fafb;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .party-tag {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      color: #e5e7eb;
+    }
+
+    .party-type {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: linear-gradient(120deg, #a855f7, #4facfe);
+      color: #0f172a;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .party-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      font-size: 11px;
+      color: #e5e7eb;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    .party-meta span::before {
+      content: "•";
+      color: #9ca3af;
+      margin-right: 4px;
+    }
+
+    .party-notes {
+      font-size: 11px;
+      color: #d1d5db;
+      margin-top: 3px;
+    }
+
+    .party-notes span {
+      color: #9ca3af;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-right: 4px;
+    }
+
+    .party-right {
+      position: relative;
+      z-index: 1;
+      padding-left: 8px;
+      border-left: 1px dashed rgba(148, 163, 184, 0.6);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    @media (max-width: 900px) {
+      .party-right {
+        border-left: none;
+        border-top: 1px dashed rgba(148, 163, 184, 0.6);
+        padding-left: 0;
+        padding-top: 6px;
+      }
+    }
+
+    .party-people {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      font-size: 11px;
+    }
+
+    .chip {
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+    }
+
+    .party-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status {
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      background: rgba(22, 163, 74, 0.2);
+      color: #bbf7d0;
+      border: 1px solid rgba(34, 197, 94, 0.9);
+    }
+
+    .status time {
+      font-size: 10px;
+      color: #4ade80;
+      margin-left: 4px;
+    }
+
+    .party-icons {
+      display: flex;
+      gap: 4px;
+      font-size: 11px;
+      color: #facc15;
+    }
+
+    .party-icons span {
+      padding: 3px 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(234, 179, 8, 0.9);
+    }
+
+    /* ---------- GROUP LIST ---------- */
+    .group-card {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      padding: 10px 11px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, border 0.1s ease;
+    }
+
+    .group-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.8);
+      border-color: #4facfe;
+    }
+
+    .group-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .group-name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .group-type-pill {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: linear-gradient(120deg, #ffde59, #ff3cac);
+      color: #111827;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .group-meta {
+      font-size: 11px;
+      color: #9ca3af;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .group-meta span::before {
+      content: "•";
+      color: #6b7280;
+      margin-right: 4px;
+    }
+
+    .group-count-badge {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      color: #e5e7eb;
+      text-align: right;
+    }
+
+    /* ---------- GROUP DETAIL ---------- */
+    .group-detail-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .group-detail-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .group-detail-title h3 {
+      font-size: 16px;
+    }
+
+    .group-detail-title span {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .badge-small {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      color: #e5e7eb;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .person-row {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 10px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      padding: 9px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .person-name {
+      font-size: 13px;
+      color: #f9fafb;
+    }
+
+    .person-sub {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .btn-checkin-person {
+      background: linear-gradient(120deg, #22c55e, #a3e635);
+      color: #052e16;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: none;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 8px 20px rgba(22, 163, 74, 0.5);
+    }
+
+    /* ---------- TOAST ---------- */
+    .toast {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(120deg, #22c55e, #a3e635);
+      color: #052e16;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 14px 40px rgba(22, 163, 74, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+      pointer-events: auto;
+    }
+
+    .toast-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="title-block">
+        <h1>Party Booking & Check‑in Hub</h1>
+        <p class="subtitle">
+          Create colourful party groups, pick the vibe, and check everyone in as they arrive.
+        </p>
+      </div>
+      <div class="tag">Ultra Colourful Mode</div>
+    </div>
+
+    <div class="app-inner">
+      <!-- LEFT: BOOKING FORM -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="card-title-dot"></span>
+            New party booking
+          </div>
+          <div class="card-caption">
+            Add a group, then manage check‑ins on the right.
+          </div>
+        </div>
+
+        <div class="pill-row">
+          <div class="pill">Groups</div>
+          <div class="pill">Party Types</div>
+          <div class="pill">Live Check‑ins</div>
+          <div class="pill">Colour Everywhere</div>
+        </div>
+
+        <form id="partyForm">
+          <div class="field">
+            <div class="label">
+              <span>Group / party name</span>
+              <span>Example: “James Birthday Crew”</span>
+            </div>
+            <input
+              type="text"
+              id="groupName"
+              placeholder="Enter group name…"
+              required
+            />
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <div class="label">
+                <span>Party type</span>
+                <span>Pick the vibe</span>
+              </div>
+              <select id="partyType" required>
+                <option value="">Choose a type…</option>
+                <option value="Birthday">Birthday</option>
+                <option value="Hen / Stag">Hen / Stag</option>
+                <option value="Kids Party">Kids Party</option>
+                <option value="Corporate">Corporate</option>
+                <option value="18+ Night Out">18+ Night Out</option>
+                <option value="Family Gathering">Family Gathering</option>
+                <option value="Surprise Party">Surprise Party</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <div class="label">
+                <span>Number of people</span>
+                <span>Auto counts from names</span>
+              </div>
+              <input
+                type="number"
+                id="peopleCount"
+                min="1"
+                placeholder="Optional"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="label">
+              <span>People in this group</span>
+              <span>Separate with commas</span>
+            </div>
+            <textarea
+              id="peopleNames"
+              placeholder="Example: Sarah, Tom, Aisha, Mike…"
+            ></textarea>
+            <div class="hint">
+              If you leave this empty, we’ll use guest numbers instead.
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="label">
+              <span>Notes or special requests</span>
+              <span>Optional</span>
+            </div>
+            <textarea
+              id="notes"
+              placeholder="Allergies, VIP, balloon colours, cake, music style…"
+            ></textarea>
+          </div>
+
+          <div class="button-row">
+            <button type="submit" class="btn-primary">
+              ✅ Create group
+            </button>
+            <button type="button" id="clearBtn" class="btn-secondary">
+              ✨ Clear form
+            </button>
+            <div class="count-badge">
+              <strong id="totalGroups">0</strong> groups •
+              <strong id="totalPeople">0</strong> people
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- RIGHT: CHECK‑INS / GROUPS / GROUP DETAIL -->
+      <div class="card">
+        <div class="right-header">
+          <div class="right-title">
+            <div class="dot-row">
+              <span class="mini-dot"></span>
+              <span class="mini-dot"></span>
+              <span class="mini-dot"></span>
+            </div>
+            <span id="rightTitleText">Live party check‑ins</span>
+          </div>
+
+          <div class="tab-row">
+            <button class="tab-btn active" id="tabCheckins">Check‑ins</button>
+            <button class="tab-btn" id="tabGroups">Groups</button>
+            <button class="tab-btn" id="tabGroupDetail" disabled>Group detail</button>
+          </div>
+        </div>
+
+        <div class="filters" id="checkinFilters">
+          <select id="filterType" class="filter-select">
+            <option value="">All party types</option>
+          </select>
+          <select id="sortOrder" class="filter-select">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="sizeDesc">Largest group</option>
+            <option value="sizeAsc">Smallest group</option>
+          </select>
+        </div>
+
+        <!-- CHECK‑INS PANEL -->
+        <div id="panelCheckins" class="panel active">
+          <div class="empty" id="emptyCheckins">
+            <strong>No check‑ins yet.</strong><br />
+            Create a colourful group on the left to see them here.
+          </div>
+        </div>
+
+        <!-- GROUPS PANEL -->
+        <div id="panelGroups" class="panel">
+          <div class="empty" id="emptyGroups">
+            <strong>No groups yet.</strong><br />
+            Add a group on the left to start managing check‑ins.
+          </div>
+        </div>
+
+        <!-- GROUP DETAIL PANEL -->
+        <div id="panelGroupDetail" class="panel">
+          <div class="empty" id="emptyGroupDetail">
+            <strong>No group selected.</strong><br />
+            Choose a group from the “Groups” tab to manage people.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">
+    <span class="toast-dot"></span>
+    <span id="toastText">Action done</span>
+  </div>
+
+  <script>
+    // ---------- ELEMENTS ----------
+    const partyForm = document.getElementById("partyForm");
+    const groupNameEl = document.getElementById("groupName");
+    const partyTypeEl = document.getElementById("partyType");
+    const peopleCountEl = document.getElementById("peopleCount");
+    const peopleNamesEl = document.getElementById("peopleNames");
+    const notesEl = document.getElementById("notes");
+    const clearBtn = document.getElementById("clearBtn");
+
+    const totalGroupsEl = document.getElementById("totalGroups");
+    const totalPeopleEl = document.getElementById("totalPeople");
+
+    const tabCheckinsEl = document.getElementById("tabCheckins");
+    const tabGroupsEl = document.getElementById("tabGroups");
+    const tabGroupDetailEl = document.getElementById("tabGroupDetail");
+    const rightTitleTextEl = document.getElementById("rightTitleText");
+
+    const panelCheckinsEl = document.getElementById("panelCheckins");
+    const panelGroupsEl = document.getElementById("panelGroups");
+    const panelGroupDetailEl = document.getElementById("panelGroupDetail");
+
+    const emptyCheckinsEl = document.getElementById("emptyCheckins");
+    const emptyGroupsEl = document.getElementById("emptyGroups");
+    const emptyGroupDetailEl = document.getElementById("emptyGroupDetail");
+
+    const filterTypeEl = document.getElementById("filterType");
+    const sortOrderEl = document.getElementById("sortOrder");
+    const checkinFiltersEl = document.getElementById("checkinFilters");
+
+    const toastEl = document.getElementById("toast");
+    const toastTextEl = document.getElementById("toastText");
+
+    // ---------- DATA ----------
+    let groups = [];
+    let selectedGroupId = null;
+
+    // ---------- TOAST ----------
+    function showToast(message) {
+      toastTextEl.textContent = message;
+      toastEl.classList.add("show");
+      setTimeout(() => {
+        toastEl.classList.remove("show");
+      }, 2200);
+    }
+
+    // ---------- TOTALS ----------
+    function updateTotals() {
+      totalGroupsEl.textContent = groups.length;
+      const totalPeople = groups.reduce((sum, g) => sum + g.people.length, 0);
+      totalPeopleEl.textContent = totalPeople;
+    }
+
+    // ---------- FILTER OPTIONS ----------
+    function updateFilterOptions() {
+      const allTypes = [...new Set(groups.map((g) => g.partyType))].filter(Boolean);
+      const currentValue = filterTypeEl.value;
+
+      filterTypeEl.innerHTML = '<option value="">All party types</option>';
+      allTypes.forEach((t) => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t;
+        filterTypeEl.appendChild(opt);
+      });
+
+      if (allTypes.includes(currentValue)) {
+        filterTypeEl.value = currentValue;
+      } else {
+        filterTypeEl.value = "";
+      }
+    }
+
+    // ---------- CREATE GROUP ----------
+    partyForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const groupName = groupNameEl.value.trim();
+      const partyType = partyTypeEl.value;
+      const notes = notesEl.value.trim();
+
+      if (!groupName || !partyType) {
+        showToast("Please add group name and party type.");
+        return;
+      }
+
+      let peopleNames = peopleNamesEl.value
+        .split(",")
+        .map((n) => n.trim())
+        .filter((n) => n.length > 0);
+
+      let peopleCount = parseInt(peopleCountEl.value, 10);
+      if (!peopleCount || peopleCount < 1) {
+        peopleCount = peopleNames.length || 1;
+      }
+
+      const groupId = Date.now().toString();
+
+      const people = peopleNames.length
+        ? peopleNames.map((name, index) => ({
+            id: groupId + "-p-" + index,
+            name,
+            checked: false,
+          }))
+        : Array.from({ length: peopleCount }, (_, i) => ({
+            id: groupId + "-p-" + i,
+            name: "Guest " + (i + 1),
+            checked: false,
+          }));
+
+      const group = {
+        id: groupId,
+        name: groupName,
+        partyType,
+        notes,
+        people,
+        createdAt: Date.now(),
+      };
+
+      groups.push(group);
+
+      updateTotals();
+      updateFilterOptions();
+      renderCheckins();
+      renderGroups();
+
+      showToast("Group created!");
+      partyForm.reset();
+    });
+
+    clearBtn.addEventListener("click", () => {
+      partyForm.reset();
+      showToast("Form cleared");
+    });
+
+    // ---------- CHECK‑INS PANEL ----------
+    function getFilteredAndSortedGroups() {
+      let result = [...groups];
+
+      const filterType = filterTypeEl.value;
+      if (filterType) {
+        result = result.filter((g) => g.partyType === filterType);
+      }
+
+      const sortOrder = sortOrderEl.value;
+      switch (sortOrder) {
+        case "oldest":
+          result.sort((a, b) => a.createdAt - b.createdAt);
+          break;
+        case "sizeDesc":
+          result.sort((a, b) => b.people.length - a.people.length);
+          break;
+        case "sizeAsc":
+          result.sort((a, b) => a.people.length - b.people.length);
+          break;
+        case "newest":
+        default:
+          result.sort((a, b) => b.createdAt - a.createdAt);
+          break;
+      }
+
+      return result;
+    }
+
+    function iconForPartyType(type) {
+      switch (type) {
+        case "Birthday": return "🎂";
+        case "Hen / Stag": return "🍾";
+        case "Kids Party": return "🧁";
+        case "Corporate": return "💼";
+        case "18+ Night Out": return "🍹";
+        case "Family Gathering": return "👨‍👩‍👧‍👦";
+        case "Surprise Party": return "🎁";
+        default: return "✨";
+      }
+    }
+
+    function renderCheckins() {
+      panelCheckinsEl.innerHTML = "";
+
+      const list = getFilteredAndSortedGroups();
+
+      if (!list.length) {
+        panelCheckinsEl.appendChild(emptyCheckinsEl);
+        emptyCheckinsEl.style.display = "block";
+        return;
+      }
+      emptyCheckinsEl.style.display = "none";
+
+      list.forEach((group) => {
+        const total = group.people.length;
+        const checked = group.people.filter((p) => p.checked).length;
+        const unchecked = total - checked;
+
+        const card = document.createElement("div");
+        card.className = "party-card";
+
+        const created = new Date(group.createdAt);
+        const timeString = created.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        const dateString = created.toLocaleDateString([], {
+          month: "short",
+          day: "numeric",
+        });
+
+        const visibleNames = group.people.slice(0, 4);
+        const extraCount = Math.max(0, total - visibleNames.length);
+
+        card.innerHTML = `
+          <div class="party-main">
+            <div class="party-top-row">
+              <div class="party-name">
+                <span>${group.name}</span>
+                <span class="party-tag">Group</span>
+              </div>
+              <div class="party-type">${group.partyType}</div>
+            </div>
+            <div class="party-meta">
+              <span>${total} people total</span>
+              <span>${checked} checked‑in</span>
+              <span>${unchecked} not checked‑in</span>
+            </div>
+            ${
+              group.notes
+                ? `<div class="party-notes"><span>Notes:</span>${group.notes}</div>`
+                : ""
+            }
+          </div>
+          <div class="party-right">
+            <div class="party-people">
+              ${
+                visibleNames
+                  .map(
+                    (p) =>
+                      `<span class="chip">${p.checked ? "✅ " : ""}${p.name}</span>`
+                  )
+                  .join("")
+              }
+              ${
+                extraCount > 0
+                  ? `<span class="chip">+${extraCount} more</span>`
+                  : ""
+              }
+            </div>
+            <div class="party-footer">
+              <div class="status">
+                Live
+                <time>${dateString} • ${timeString}</time>
+              </div>
+              <div class="party-icons">
+                <span>🎉</span>
+                <span>${iconForPartyType(group.partyType)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        panelCheckinsEl.appendChild(card);
+      });
+    }
+
+    // ---------- GROUPS PANEL ----------
+    function renderGroups() {
+      panelGroupsEl.innerHTML = "";
+
+      if (!groups.length) {
+        panelGroupsEl.appendChild(emptyGroupsEl);
+        emptyGroupsEl.style.display = "block";
+        return;
+      }
+      emptyGroupsEl.style.display = "none";
+
+      const sorted = [...groups].sort((a, b) => b.createdAt - a.createdAt);
+
+      sorted.forEach((group) => {
+        const total = group.people.length;
+        const checked = group.people.filter((p) => p.checked).length;
+        const unchecked = total - checked;
+
+        const card = document.createElement("div");
+        card.className = "group-card";
+        card.addEventListener("click", () => {
+          openGroupDetail(group.id);
+        });
+
+        const created = new Date(group.createdAt);
+        const dateString = created.toLocaleDateString([], {
+          month: "short",
+          day: "numeric",
+        });
+
+        card.innerHTML = `
+          <div class="group-main">
+            <div class="group-name-row">
+              <span>${group.name}</span>
+              <span class="group-type-pill">${group.partyType}</span>
+            </div>
+            <div class="group-meta">
+              <span>${total} people</span>
+              <span>${checked} checked‑in</span>
+              <span>${unchecked} not checked‑in</span>
+              <span>Created ${dateString}</span>
+            </div>
+          </div>
+          <div class="group-count-badge">
+            Not checked‑in: <strong>${unchecked}</strong><br />
+            Click to manage
+          </div>
+        `;
+
+        panelGroupsEl.appendChild(card);
+      });
+    }
+
+    // ---------- GROUP DETAIL PANEL ----------
+    function openGroupDetail(groupId) {
+      const group = groups.find((g) => g.id === groupId);
+      selectedGroupId = groupId;
+
+      panelGroupDetailEl.innerHTML = "";
+
+      if (!group) {
+        panelGroupDetailEl.appendChild(emptyGroupDetailEl);
+        emptyGroupDetailEl.style.display = "block";
+        return;
+      }
+      emptyGroupDetailEl.style.display = "none";
+
+      const total = group.people.length;
+      const checked = group.people.filter((p) => p.checked).length;
+      const uncheckedList = group.people.filter((p) => !p.checked);
+
+      const header = document.createElement("div");
+      header.className = "group-detail-header";
+      header.innerHTML = `
+        <div class="group-detail-title">
+          <h3>${group.name}</h3>
+          <span>${group.partyType} • ${total} people • ${checked} checked‑in</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+          <span class="badge-small">${uncheckedList.length} not checked‑in</span>
+          ${ group.notes ? `<span class="badge-small">Notes added</span>` : "" }
+
+          <button
+            class="btn-delete-group"
+            onclick="deleteGroup('${group.id}')"
+            style="
+              background: linear-gradient(120deg, #ef4444, #dc2626);
+              color: white;
+              padding: 6px 12px;
+              border-radius: 999px;
+              border: none;
+              font-size: 12px;
+              font-weight: 700;
+              cursor: pointer;
+              white-space: nowrap;
+              box-shadow: 0 8px 20px rgba(239, 68, 68, 0.5);
+            "
+          >
+            Delete group
+          </button>
+        </div>
+      `;
+
+      panelGroupDetailEl.appendChild(header);
+
+      if (group.notes) {
+        const notesBox = document.createElement("div");
+        notesBox.style.fontSize = "11px";
+        notesBox.style.color = "#d1d5db";
+        notesBox.style.marginBottom = "8px";
+        notesBox.innerHTML = `<span style="color:#9ca3af;text-transform:uppercase;letter-spacing:0.12em;font-size:10px;">Notes:</span> ${group.notes}`;
+        panelGroupDetailEl.appendChild(notesBox);
+      }
+
+      const title = document.createElement("div");
+      title.style.fontSize = "12px";
+      title.style.color = "#e5e7eb";
+      title.style.margin = "6px 0 4px";
+      title.textContent = "People not checked‑in";
+      panelGroupDetailEl.appendChild(title);
+
+      if (!uncheckedList.length) {
+        const allIn = document.createElement("div");
+        allIn.className = "empty";
+        allIn.innerHTML = `
+          <strong>Everyone is checked‑in!</strong><br/>
+          This group is fully inside and partying.
+        `;
+        panelGroupDetailEl.appendChild(allIn);
+      } else {
+        uncheckedList.forEach((person) => {
+          const row = document.createElement("div");
+          row.className = "person-row";
+
+          const left = document.createElement("div");
+          left.innerHTML = `
+            <div class="person-name">${person.name}</div>
+            <div class="person-sub">Not checked‑in yet</div>
+          `;
+
+          const btn = document.createElement("button");
+          btn.className = "btn-checkin-person";
+          btn.textContent = "Check‑in";
+          btn.addEventListener("click", () => {
+            checkInPerson(group.id, person.id);
+          });
+
+          row.appendChild(left);
+          row.appendChild(btn);
+          panelGroupDetailEl.appendChild(row);
+        });
+      }
+
+      switchToTab("groupDetail");
+    }
+
+    function checkInPerson(groupId, personId) {
+      const group = groups.find((g) => g.id === groupId);
+      if (!group) return;
+
+      const person = group.people.find((p) => p.id === personId);
+      if (!person || person.checked) return;
+
+      person.checked = true;
+
+      showToast(person.name + " checked‑in");
+
+      updateTotals();
+      renderCheckins();
+      renderGroups();
+      openGroupDetail(groupId);
+    }
+
+    // ---------- DELETE GROUP ----------
+    function deleteGroup(groupId) {
+      const group = groups.find((g) => g.id === groupId);
+      if (!group) return;
+
+      const confirmDelete = confirm(
+        `Delete group "${group.name}" and all check‑in data?`
+      );
+
+      if (!confirmDelete) return;
+
+      groups = groups.filter((g) => g.id !== groupId);
+      selectedGroupId = null;
+
+      updateTotals();
+      updateFilterOptions();
+      renderGroups();
+      renderCheckins();
+
+      panelGroupDetailEl.innerHTML = "";
+      panelGroupDetailEl.appendChild(emptyGroupDetailEl);
+      emptyGroupDetailEl.style.display = "block";
+
+      switchToTab("groups");
+
+      showToast("Group deleted");
+    }
+
+    // ---------- TAB SWITCHING ----------
+    function switchToTab(tab) {
+      tabCheckinsEl.classList.remove("active");
+      tabGroupsEl.classList.remove("active");
+      tabGroupDetailEl.classList.remove("active");
+
+      panelCheckinsEl.classList.remove("active");
+      panelGroupsEl.classList.remove("active");
+      panelGroupDetailEl.classList.remove("active");
+
+      checkinFiltersEl.style.display = "none";
+      tabGroupDetailEl.disabled = true;
+
+      if (tab === "checkins") {
+        tabCheckinsEl.classList.add("active");
+        panelCheckinsEl.classList.add("active");
+        rightTitleTextEl.textContent = "Live party check‑ins";
+        checkinFiltersEl.style.display = "flex";
+      } else if (tab === "groups") {
+        tabGroupsEl.classList.add("active");
+        panelGroupsEl.classList.add("active");
+        rightTitleTextEl.textContent = "Groups";
+      } else if (tab === "groupDetail") {
+        tabGroupDetailEl.classList.add("active");
+        panelGroupDetailEl.classList.add("active");
+        rightTitleTextEl.textContent = "Group detail";
+        tabGroupDetailEl.disabled = false;
+      }
+    }
+
+    tabCheckinsEl.addEventListener("click", () => switchToTab("checkins"));
+    tabGroupsEl.addEventListener("click", () => switchToTab("groups"));
+    tabGroupDetailEl.addEventListener("click", () => {
+      if (selectedGroupId) {
+        switchToTab("groupDetail");
+      }
+    });
+
+    function openGroup(id) {
+      openGroupDetail(id);
+    }
+
+    // ---------- FILTER EVENTS ----------
+    filterTypeEl.addEventListener("change", renderCheckins);
+    sortOrderEl.addEventListener("change", renderCheckins);
+
+    // ---------- INITIAL RENDER ----------
+    updateTotals();
+    renderCheckins();
+    renderGroups();
+  </script>
+</body>
+</html>
